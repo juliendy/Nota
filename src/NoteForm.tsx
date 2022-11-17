@@ -1,6 +1,6 @@
 import { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "./App";
 import { v4 as uuidV4 } from "uuid";
@@ -9,16 +9,20 @@ type NoteFormProps = {
     onSubmit: (data: NoteData) => void;
     onAddTag: (tag: Tag) => void;
     availableTags: Tag[];
-};
+} & Partial<NoteData>;
 
 export function NoteForm({
     onSubmit,
     onAddTag,
     availableTags,
+    title = "",
+    markdown = "",
+    tags = [],
 }: NoteFormProps) {
     const titleRef = useRef<HTMLInputElement>(null);
     const markdownRef = useRef<HTMLTextAreaElement>(null);
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+    const navigate = useNavigate();
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -26,8 +30,10 @@ export function NoteForm({
         onSubmit({
             title: titleRef.current!.value,
             markdown: markdownRef.current!.value,
-            tags: [],
+            tags: selectedTags,
         });
+
+        navigate("..");
     }
 
     return (
@@ -37,7 +43,11 @@ export function NoteForm({
                     <Col>
                         <Form.Group controlId="title">
                             <Form.Label>Title</Form.Label>
-                            <Form.Control ref={titleRef} required />
+                            <Form.Control
+                                ref={titleRef}
+                                required
+                                defaultValue={title}
+                            />
                         </Form.Group>
                     </Col>
                     <Col>
@@ -76,6 +86,7 @@ export function NoteForm({
                 <Form.Group controlId="markdown">
                     <Form.Label>Body</Form.Label>
                     <Form.Control
+                        defaultValue={markdown}
                         required
                         as="textarea"
                         ref={markdownRef}
