@@ -13,7 +13,7 @@
 
 ## Introduction
 
-==
+This project stemmed from me wanting to go heavier on logic than design to improve on TypeScript and React. I also wanted to try Bootstrap instead of Tailwindcss. Features: categories, markdown support, filter and localstorage. Try it out below!
 
 ## Link to website demo
 
